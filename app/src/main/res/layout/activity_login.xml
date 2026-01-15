@@ -3,12 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".LogInActivity">
 
     <include
+        android:id="@+id/toolbar"
         layout="@layout/toolbar"
         app:layout_constraintTop_toTopOf="parent"/>
 
@@ -17,11 +17,11 @@
         android:id="@+id/tiUserName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Username"
+        android:layout_margin="16dp"
+        android:hint="UserName"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="16dp">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etUserName"
@@ -34,12 +34,12 @@
         android:id="@+id/tiPassword"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_margin="16dp"
         android:hint="Password"
         app:endIconMode="password_toggle"
         app:layout_constraintTop_toBottomOf="@id/tiUserName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="16dp">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etPassword"
@@ -48,45 +48,26 @@
             android:inputType="textPassword"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- LOGIN -->
+    <!-- LOGIN BUTTON -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnLogin"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_margin="16dp"
         android:text="LOGIN"
         app:layout_constraintTop_toBottomOf="@id/tiPassword"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="16dp"/>
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- GO TO REGISTER -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnGoRegister"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:text="REGISTER"
-        android:textAllCaps="false"
-
-        android:textColor="@color/black"
-        app:backgroundTint="@android:color/transparent"
-
-        app:layout_constraintBottom_toBottomOf="@+id/tv"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tv"
-        app:layout_constraintTop_toTopOf="@+id/tv"
-        app:rippleColor="#928A8A" />
-
+    <!-- REGISTER TEXT -->
     <TextView
-        android:id="@+id/tv"
+        android:id="@+id/tvRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="68dp"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="16sp"
         android:layout_marginTop="24dp"
-        android:text="Don't Have Account ?"
-        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

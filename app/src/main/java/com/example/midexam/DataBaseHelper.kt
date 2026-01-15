@@ -52,6 +52,17 @@ class DatabaseHelper(context: Context) :
         return id
     }
 
+    // New function to get username by ID
+    fun getUsername(userId: Int): String {
+        val c = readableDatabase.rawQuery(
+            "SELECT username FROM users WHERE id=?",
+            arrayOf(userId.toString())
+        )
+        val username = if (c.moveToFirst()) c.getString(0) else ""
+        c.close()
+        return username
+    }
+
     // ----------------- STATUS -----------------
     fun addStatus(userId: Int, text: String): Status {
         val cv = ContentValues()
@@ -91,5 +102,6 @@ class DatabaseHelper(context: Context) :
         return list
     }
 }
+
 
 

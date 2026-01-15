@@ -3,8 +3,6 @@ package com.example.midexam
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -16,7 +14,7 @@ import com.google.android.material.button.MaterialButton
 
 class HomeActivity : AppCompatActivity() {
 
-    lateinit var db: DatabaseHelper
+    private lateinit var db: DatabaseHelper
     private var userId = -1
     private lateinit var adapter: StatusAdapter
     private lateinit var list: MutableList<Status>
@@ -31,17 +29,25 @@ class HomeActivity : AppCompatActivity() {
         supportActionBar?.title = "Home"
 
         db = DatabaseHelper(this)
-        userId = intent.getIntExtra("USER_ID", -1)
+
+        // ✅ Get user ID from intent or session
+        val prefs = getSharedPreferences("login_prefs", MODE_PRIVATE)
+        userId = intent.getIntExtra("USER_ID", prefs.getInt("USER_ID", -1))
+
+        if (userId == -1) {
+            // No logged-in user, return to login
+            startActivity(Intent(this, LogInActivity::class.java))
+            finish()
+            return
+        }
 
         val etStatus = findViewById<EditText>(R.id.etStatus)
         val btnUpload = findViewById<MaterialButton>(R.id.btnUpload)
         val rv = findViewById<RecyclerView>(R.id.rvStatus)
 
-        // Load statuses
+        // ✅ Load existing statuses
         list = db.getStatuses(userId)
-
-        adapter = StatusAdapter(
-            list,
+        adapter = StatusAdapter(list,
             onEditClick = { status -> showEditDialog(status) },
             onDeleteClick = { status -> deleteStatus(status) }
         )
@@ -49,6 +55,7 @@ class HomeActivity : AppCompatActivity() {
         rv.layoutManager = LinearLayoutManager(this)
         rv.adapter = adapter
 
+        // ✅ Upload button
         btnUpload.setOnClickListener {
             val text = etStatus.text.toString().trim()
             if (text.isEmpty()) {
@@ -59,18 +66,19 @@ class HomeActivity : AppCompatActivity() {
                 adapter.notifyItemInserted(list.size - 1)
                 rv.scrollToPosition(list.size - 1)
                 etStatus.setText("")
+                toast("You Post A Status")
             }
         }
+
     }
 
-    // ✅ ADD THIS: show logout button in toolbar
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    // ✅ Menu with logout
+    override fun onCreateOptionsMenu(menu: android.view.Menu): Boolean {
         menuInflater.inflate(R.menu.menu_home, menu)
         return true
     }
 
-    // ✅ ADD THIS: handle logout click
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onOptionsItemSelected(item: android.view.MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_logout -> {
                 showLogoutDialog()
@@ -80,21 +88,23 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    // ✅ ADD THIS: logout confirmation dialog
+    // ✅ Logout with session clear
     private fun showLogoutDialog() {
         AlertDialog.Builder(this)
             .setTitle("Logout")
             .setMessage("Are you sure you want to logout?")
             .setPositiveButton("Yes") { _, _ ->
+                // Clear saved session
+                getSharedPreferences("login_prefs", MODE_PRIVATE).edit().clear().apply()
                 val intent = Intent(this, LogInActivity::class.java)
-                intent.flags =
-                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
             }
             .setNegativeButton("Cancel", null)
             .show()
     }
 
+    // ✅ Edit a status
     private fun showEditDialog(status: Status) {
         val et = EditText(this)
         et.setText(status.text)
@@ -115,6 +125,7 @@ class HomeActivity : AppCompatActivity() {
             .show()
     }
 
+    // ✅ Delete a status
     private fun deleteStatus(status: Status) {
         AlertDialog.Builder(this)
             .setTitle("Delete Status")
@@ -130,10 +141,12 @@ class HomeActivity : AppCompatActivity() {
             .show()
     }
 
+    // ✅ Helper toast
     private fun toast(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
     }
 }
+
 
 
 
