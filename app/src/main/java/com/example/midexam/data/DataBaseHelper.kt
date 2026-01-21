@@ -1,10 +1,10 @@
-package com.example.loginsystem
+package com.example.midexam.data
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import com.example.midexam.Status
+import com.example.midexam.model.StatusModel
 
 class DatabaseHelper(context: Context) :
     SQLiteOpenHelper(context, "LoginDB", null, 4) {
@@ -64,13 +64,13 @@ class DatabaseHelper(context: Context) :
     }
 
     // ----------------- STATUS -----------------
-    fun addStatus(userId: Int, text: String): Status {
+    fun addStatus(userId: Int, text: String): StatusModel {
         val cv = ContentValues()
         cv.put("user_id", userId)
         cv.put("text", text)
         cv.put("created_at", System.currentTimeMillis())
         val id = writableDatabase.insert("status", null, cv).toInt()
-        return Status(id, text)
+        return StatusModel(id, text)
     }
 
     fun updateStatus(statusId: Int, newText: String) {
@@ -87,8 +87,8 @@ class DatabaseHelper(context: Context) :
         )
     }
 
-    fun getStatuses(userId: Int): MutableList<Status> {
-        val list = mutableListOf<Status>()
+    fun getStatuses(userId: Int): MutableList<StatusModel> {
+        val list = mutableListOf<StatusModel>()
         val c = readableDatabase.rawQuery(
             "SELECT id, text FROM status WHERE user_id=? ORDER BY created_at ASC",
             arrayOf(userId.toString())
@@ -96,7 +96,7 @@ class DatabaseHelper(context: Context) :
         while (c.moveToNext()) {
             val id = c.getInt(0)
             val text = c.getString(1)
-            list.add(Status(id, text))
+            list.add(StatusModel(id, text))
         }
         c.close()
         return list

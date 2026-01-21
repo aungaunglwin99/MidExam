@@ -12,13 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MidExam">
         <activity
-            android:name=".HomeActivity"
+            android:name=".screen.HomeActivity"
             android:exported="false" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".screen.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".LogInActivity"
+            android:name=".screen.LogInActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
